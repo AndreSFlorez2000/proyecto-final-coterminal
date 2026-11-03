@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proyecto Final Coterminal — Demo de Control OC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <!-- Versión pública, sin autenticación empresarial -->
+    <link rel="stylesheet" href="src/styles/principal.css">
+<link rel="stylesheet" href="src/styles/componentes.css">
+
+  <link rel="stylesheet" href="src/styles/auditoria.css">
+</head>
+<body class="dark">
+
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Procesando archivo...</div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+<div role="note" style="padding:10px 18px;background:#633b13;color:#fff5d5;font:600 12px Manrope,sans-serif;text-align:center">DEMO PÚBLICA · Procesamiento local en el navegador · No cargues información interna o confidencial sin autorización</div>
+
+<!-- DIALOG -->
+<div id="dialogOverlay" class="dialog-overlay" style="display:none;">
+  <div class="dialog-box">
+    <div class="dialog-title" id="dialogTitle"></div>
+    <div class="dialog-msg" id="dialogMessage"></div>
+    <div class="dialog-actions" id="dialogActions"></div>
+  </div>
+</div>
+
+<div class="app-layout">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo">⬡ <span>Control</span>OC</div>
+    <div class="topbar-stats">
+      <div class="top-badge">Filas Excel: <strong id="excelRows">—</strong></div>
+      <div class="top-badge">Base: <strong id="totalRows">—</strong></div>
+      <div class="top-badge">Filtrado: <strong id="resultCount">—</strong></div>
+      <div class="top-badge">Vista: <strong id="sheetCount">—</strong></div>
+      <div class="top-badge">X Lib: <strong id="xCount">—</strong></div>
+      <div class="top-badge">Borrados L: <strong id="deletedCount">—</strong></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm" id="toggleThemeBtn" title="Cambiar tema">🌙</button>
+      <span class="auth-user-pill" style="display:inline-flex">Demostración pública</span>
+      
+      <button class="btn btn-secondary btn-sm" id="openStatsBtn">📊 Estadísticas</button>
+      <button class="btn btn-secondary btn-sm" id="openCruceBtn">🔗 Cruce</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Archivo principal</div>
+      <div class="upload-box">
+        <label class="upload-btn" for="excelFile">📂 Cargar Excel</label>
+        <input id="excelFile" type="file" accept=".xlsx,.xls,.csv" />
+        <div class="file-status" id="fileStatus">Sin archivo cargado</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Carpeta documental</div>
+      <div class="onedrive-card">
+        <button class="btn btn-success" id="docFolderBtn" type="button" onclick="vincularCarpetaDocumental()">📁 Vincular carpeta documental</button>
+        <button class="btn btn-secondary" id="docFolderRefreshBtn" type="button" onclick="refrescarCarpetaDocumental()" style="display:none;">🔄 Releer carpeta</button>
+        <small id="msStatus">Sin carpeta vinculada. Selecciona la carpeta OneDrive/Proveedores desde tu PC.</small>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Filtros activos</div>
+      <div class="active-chips" id="activeChips">
+        <span style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">Sin filtros</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Buscar</div>
+
+      <div class="field">
+        <label for="incInput">Incidencias</label>
+        <input id="incInput" type="text" placeholder="82493, 82500..." />
+      </div>
+
+      <div class="field">
+        <label for="ocInput">OC</label>
+        <input id="ocInput" type="text" placeholder="4503317560" />
+      </div>
+
+      <div class="field">
+        <label for="cotInput">Cotización</label>
+        <input id="cotInput" type="text" placeholder="IBA0326, E5219" list="cotOptions" />
+        <datalist id="cotOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="providerInput">Proveedor</label>
+        <input id="providerInput" type="text" placeholder="Buscar proveedor" list="providerOptions" />
+        <datalist id="providerOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="storeInput">Tienda</label>
+        <input id="storeInput" type="text" placeholder="Buscar tienda" list="storeOptions" />
+        <datalist id="storeOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="supervisorInput">Supervisor</label>
+        <input id="supervisorInput" type="text" placeholder="Buscar supervisor" list="supervisorOptions" />
+        <datalist id="supervisorOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="tipoIncidenciaInput">Tipo incidencia</label>
+        <input id="tipoIncidenciaInput" type="text" placeholder="MC01, MC02, MP" list="tipoIncidenciaOptions" />
+        <datalist id="tipoIncidenciaOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="tipoServicioInput">Tipo servicio</label>
+        <input id="tipoServicioInput" type="text" placeholder="CVC, EES, CIV" list="tipoServicioOptions" />
+        <datalist id="tipoServicioOptions"></datalist>
+      </div>
+
+      <div class="field">
+        <label for="tipoGastoInput">Tipo gasto</label>
+        <input id="tipoGastoInput" type="text" placeholder="OPX, KPX" list="tipoGastoOptions" />
+        <datalist id="tipoGastoOptions"></datalist>
+      </div>
+
+      <button class="btn btn-primary" id="searchBtn">🔍 Aplicar filtros</button>
+      <button class="btn btn-secondary" id="clearBtn">✕ Limpiar filtros</button>
+      <button class="btn btn-success" id="copyBtn">📋 Copiar incidencias</button>
+      <button class="btn btn-secondary" id="exportFilteredBtn">⬇ Exportar filtrado</button>
+
+      <div class="deleted-filter-note">
+        Eliminadas detectadas por indicador de borrado <strong>L</strong>. Puedes verlas aparte desde este botón o quitarlas con el check de la barra superior.
+      </div>
+      <button class="btn btn-yellow-filter" id="showDeletedOnlyBtn">🟡 Ver solo eliminadas L</button>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Filas Excel</div>
+        <div class="kpi-value" id="kpiExcel">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Base total</div>
+        <div class="kpi-value" id="kpiBase">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Filtrado</div>
+        <div class="kpi-value accent" id="kpiFiltered">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">X Liberación</div>
+        <div class="kpi-value yellow" id="kpiX">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Borrados L</div>
+        <div class="kpi-value" id="kpiDeleted">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Vista activa</div>
+        <div class="kpi-value" style="font-size:14px; padding-top:4px;" id="kpiView">—</div>
+      </div>
+    </div>
+
+    <!-- FINANCIAL BAR -->
+    <div class="fin-bar" id="finBar">
+      <div class="fin-item">
+        <div class="label">Total facturado</div>
+        <div class="value" id="finFacturado">—</div>
+      </div>
+      <div class="fin-item">
+        <div class="label">Total pendiente</div>
+        <div class="value" id="finPendiente">—</div>
+      </div>
+      <div class="fin-item">
+        <div class="label">Total activos</div>
+        <div class="value" id="finActivos">—</div>
+      </div>
+      <div class="fin-item">
+        <div class="label">Total general</div>
+        <div class="value" id="finRegistros">—</div>
+      </div>
+    </div>
+
+    <!-- VIEW TABS -->
+    <div class="view-tabs" id="viewTabs">
+      <span style="font-size:12px; color:var(--muted); font-family:var(--font-mono);">Carga un archivo para activar las vistas</span>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrapper" id="tableWrapper">
+      <div class="empty-state">
+        <span class="icon">📁</span>
+        Carga tu archivo Excel para comenzar.<br>
+        <span style="font-size:12px;">El archivo debe tener una hoja llamada <strong>Sheet1</strong></span>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════════════ MODALS ══════════════════ -->
+
+<!-- CRUCE MODAL -->
+<div id="cruceModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">🔗 Cruce OC vs D1GO</div>
+        <div class="modal-subtitle">Solo muestra incidencias que existen en ambos archivos. Es control administrativo, no el total general de D1GO.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-success btn-sm" id="openD1goStatsBtn">📊 Estado general D1GO</button>
+        <button class="btn btn-secondary btn-sm" onclick="closeCruceModal()">✕ Cerrar</button>
+      </div>
+    </div>
+
+    <div class="cruce-help-panel">
+      <div class="cruce-help-card">
+        <h4>Qué estás viendo en este módulo</h4>
+        <p><strong>Cruce OC vs D1GO</strong> no es todo D1GO. Aquí solo aparecen las incidencias que existen en el archivo de OC y también existen en el archivo D1GO. Sirve para detectar riesgos administrativos: OC facturadas que siguen abiertas, pendientes antiguas o casos que requieren cierre.</p>
+      </div>
+      <div class="cruce-help-card">
+        <h4>Cómo leer las alertas</h4>
+        <ul>
+          <li><strong>Fact + abierta/sol:</strong> ya tiene OC facturada pero D1GO sigue abierto o solicitado.</li>
+          <li><strong>Pend/Act/Gen + ab/sol:</strong> tiene OC pendiente, activa o generada y aún requiere seguimiento.</li>
+          <li><strong>Cerradas:</strong> casos ya cerrados en D1GO dentro del cruce.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: repeat(4,1fr);">
+      <div class="stat-item"><div class="s-label">Archivo OC</div><div class="s-value" id="crucePrincipalStatus">No cargado</div></div>
+      <div class="stat-item"><div class="s-label">Archivo D1GO</div><div class="s-value" id="cruceSecundarioStatus">No cargado</div></div>
+      <div class="stat-item"><div class="s-label">Registros D1GO</div><div class="s-value" id="cruceSecundarioCount">0</div></div>
+      <div class="stat-item"><div class="s-label">Coincidencias OC↔D1GO</div><div class="s-value" id="cruceMatchCount">0</div></div>
+    </div>
+
+    <div class="upload-box" style="margin-bottom:16px;">
+      <label class="upload-btn" for="excelFileCruce">📂 Cargar archivo incidencias (D1GO)</label>
+      <input id="excelFileCruce" type="file" accept=".xlsx,.xls,.csv" />
+      <div class="file-status" id="cruceFileStatus">Sin archivo secundario</div>
+    </div>
+
+    <div class="cruce-filters">
+      <div class="field">
+        <label for="cruceEstadoFilter">Estado General</label>
+        <select id="cruceEstadoFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="cruceEstadoOcFilter">Estado OC</label>
+        <select id="cruceEstadoOcFilter">
+          <option value="">Todos</option>
+          <option value="Facturada">Facturada</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Activa">Activa</option>
+          <option value="Generada">Generada</option>
+          <option value="Pendiente|Activa|Generada">Pend + Activa + Gen</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="cruceSupervisorFilter">Supervisor</label>
+        <select id="cruceSupervisorFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="cruceIncidenciaFilter">Incidencia</label>
+        <input id="cruceIncidenciaFilter" type="text" placeholder="82493, 82500" />
+      </div>
+      <div class="field">
+        <label for="cruceFechaTipo">Tipo fecha</label>
+        <select id="cruceFechaTipo">
+          <option value="ingreso">Ingreso</option>
+          <option value="cierre">Cierre</option>
+          <option value="mixta">Mixta</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="cruceFechaDesde">Fecha desde</label>
+        <input id="cruceFechaDesde" type="date" />
+      </div>
+      <div class="field">
+        <label for="cruceFechaHasta">Fecha hasta</label>
+        <input id="cruceFechaHasta" type="date" />
+      </div>
+      <div class="field">
+        <label for="cruceSearchInput">Búsqueda general</label>
+        <input id="cruceSearchInput" type="text" placeholder="ID, tienda, proveedor..." />
+      </div>
+      <div class="field">
+        <label>Vista crítica</label>
+        <label class="inline-check"><input id="cruceSoloCriticos" type="checkbox" /> Mostrar solo críticos</label>
+      </div>
+      <div class="field">
+        <label>Facturación crítica</label>
+        <label class="inline-check"><input id="cruceSoloCritFact" type="checkbox" /> Solo críticos facturados</label>
+      </div>
+      <div class="field">
+        <label>Liberadas + D1GO abierto</label>
+        <label class="inline-check cruce-liberada-filter"><input id="cruceSoloLiberadas2XAbiertas" type="checkbox" /> Liberadas 2 X + abiertas</label>
+      </div>
+      <div class="cruce-actions-block" style="align-self:flex-end;">
+        <button class="btn btn-primary btn-sm" id="runCruceBtn">⚡ Cruzar</button>
+        <button class="btn btn-secondary btn-sm" id="copyCruceIncBtn">📋 Copiar incidencias</button>
+        <button class="btn btn-secondary btn-sm" id="clearCruceFiltersBtn">✕ Limpiar</button>
+        <button class="btn btn-secondary btn-sm" id="exportCruceResumenBtn">⬇ Exportar resumen</button>
+        <button class="btn btn-secondary btn-sm" id="exportCruceBtn">⬇ Exportar completo</button>
+      </div>
+    </div>
+
+    <div id="cruceAlertBox" style="display:none; margin-bottom:12px;"></div>
+
+    <div class="kpi-hero-grid">
+      <div class="kpi-hero"><div class="s-label">Abiertas en cruce</div><div class="s-value" id="secAbiertas">0</div><div class="s-help">Incidencias cruzadas que siguen abiertas en D1GO.</div></div>
+      <div class="kpi-hero warn"><div class="s-label">Solicitadas en cruce</div><div class="s-value" id="secSolicitadas">0</div><div class="s-help">Casos en espera de avance o gestión.</div></div>
+      <div class="kpi-hero"><div class="s-label">Cerradas en cruce</div><div class="s-value green" id="secCerradas">0</div><div class="s-help">Casos cruzados que ya quedaron cerrados.</div></div>
+      <div class="kpi-hero danger"><div class="s-label">Facturada + abierta/sol</div><div class="s-value accent" id="cruceCriticoFact">0</div><div class="s-help">Alerta crítica: ya se facturó, pero D1GO no aparece cerrado.</div></div>
+      <div class="kpi-hero warn"><div class="s-label">Pend/Act/Gen + ab/sol</div><div class="s-value" id="cruceCriticoGen">0</div><div class="s-help">OC con seguimiento pendiente antes de cierre.</div></div>
+    </div>
+
+    <div class="cruce-section-title">
+      <div><strong>Detalle del cruce</strong><br><small>La tabla se actualiza con los filtros aplicados arriba.</small></div>
+    </div>
+    <div id="cruceResultados" style="margin-bottom:16px;">
+      <div class="empty-state"><span class="icon">🔗</span>Carga el archivo secundario y presiona <strong>Cruzar</strong>.</div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:16px; margin-bottom:8px;">
+      <div style="font-size:12px; color:var(--muted); font-family:var(--font-mono);">Resumen opcional del archivo D1GO completo</div>
+      <button class="btn btn-secondary btn-sm" id="cruceStatsToggleBtn" onclick="toggleCruceResumenD1go()">Mostrar resumen D1GO completo</button>
+    </div>
+    <div id="cruceSecundarioWrap" style="display:none; margin-top:16px;">
+      <div id="secundarioStats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CRUCE STATS MODAL -->
+<div id="cruceStatsModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📊 Estadísticas del cruce OC vs D1GO</div>
+        <div class="modal-subtitle">Resumen únicamente de coincidencias entre el archivo principal y D1GO.</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="closeCruceStatsModal()">✕ Cerrar</button>
+    </div>
+    <div class="stat-grid" style="grid-template-columns: repeat(6,1fr);">
+      <div class="stat-item"><div class="s-label">Coincidencias</div><div class="s-value" id="cruceStatsTotal">0</div></div>
+      <div class="stat-item"><div class="s-label">Cerradas</div><div class="s-value green" id="cruceStatsCerradas">0</div></div>
+      <div class="stat-item"><div class="s-label">Abiertas</div><div class="s-value accent" id="cruceStatsAbiertas">0</div></div>
+      <div class="stat-item"><div class="s-label">Solicitadas</div><div class="s-value" id="cruceStatsSolicitadas">0</div></div>
+      <div class="stat-item"><div class="s-label">Crítico facturado</div><div class="s-value accent" id="cruceStatsCritFact">0</div></div>
+      <div class="stat-item"><div class="s-label">Crítico pend/act</div><div class="s-value" id="cruceStatsCritGen">0</div></div>
+    </div>
+    <div id="cruceStatsContent"></div>
+  </div>
+</div>
+
+<!-- D1GO STATS MODAL -->
+<div id="d1goStatsModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📊 Estado general D1GO</div>
+        <div class="modal-subtitle">Analiza TODO el archivo D1GO cargado. No es el cruce OC vs D1GO.</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="closeD1goStatsModal()">✕ Cerrar</button>
+    </div>
+    <div class="d1go-futuristic-shell">
+      <div class="d1go-header-row">
+        <div class="d1go-title-mark"><span class="d1go-logo-mini">📊</span><span>ESTADÍSTICAS DE INCIDENCIAS D1GO</span></div>
+        <div class="d1go-quick-actions">
+          <button class="btn btn-success btn-sm" id="openCicloCortoBtnBanner" type="button" onclick="openCicloCortoModal()">📆 Ciclo Corto</button>
+          <button class="btn btn-primary btn-sm" id="openCCUrgVitalBtnBanner" type="button" onclick="openCCUrgVitalModal()">🚨 CCUrgVital</button>
+          <button class="btn btn-secondary btn-sm" id="openPreventivosBtnBanner" type="button" onclick="openPreventivosModal && openPreventivosModal()">🛠️ Preventivos</button>
+        </div>
+      </div>
+      <div class="d1go-filter-grid">
+        <label class="d1go-filter-card big-toggle" title="Une Solicitadas + Abiertas como Abierto y Cerradas + Rechazadas + Anuladas como Cerrado">
+          <input id="d1goResumenEstados" type="checkbox" />
+          <span class="big-check">✓</span>
+          <span><span class="filter-title" style="margin:0;display:block;">Resumen</span><small style="color:var(--muted);font-family:var(--font-mono);">Abierto / Cerrado</small></span>
+        </label>
+        <label class="d1go-filter-card big-toggle preventivo-toggle" title="Cuando está activo incluye registros cuyo Servicio contiene Rutina Preventiva / Preventivo. Si está apagado, los oculta de esta tabla.">
+          <input id="d1goIncludePreventivos" type="checkbox" />
+          <span class="big-check">🛠️</span>
+          <span><span class="filter-title" style="margin:0;display:block;">Preventivos</span><small style="color:var(--muted);font-family:var(--font-mono);">Incluir en tabla</small></span>
+        </label>
+        <div class="d1go-filter-card">
+          <div class="filter-title">Filtro vitales</div>
+          <input id="d1goRemoveVitales" type="checkbox" style="display:none;" />
+          <input id="d1goOnlyVitales" type="checkbox" style="display:none;" />
+          <div class="d1go-segmented" id="d1goVitalModeGroup">
+            <button class="d1go-seg-btn" type="button" data-vital-mode="sin">〽️ Medias y bajas</button>
+            <button class="d1go-seg-btn active" type="button" data-vital-mode="all">💚 Todas</button>
+            <button class="d1go-seg-btn" type="button" data-vital-mode="solo">🚨 Solo vitales</button>
+          </div>
+        </div>
+        <div class="d1go-filter-card">
+          <div class="filter-title">Supervisor</div>
+          <select id="d1goSupervisorFilter"><option value="">Todos los supervisores</option></select>
+        </div>
+        <div class="d1go-filter-card">
+          <div class="filter-title">Año</div>
+          <select id="d1goYearFilter"><option value="">Todos</option></select>
+        </div>
+      </div>
+      <div class="stats-toolbar" style="margin-bottom:0;">
+        <div class="field"><label for="d1goEstadoFilter">Estado D1GO</label><select id="d1goEstadoFilter"><option value="">Todos</option></select></div>
+        <div class="field"><label for="d1goTiendaFilter">Tienda</label><select id="d1goTiendaFilter"><option value="">Todas</option></select></div>
+        <div class="field"><label for="d1goMesFilter">Mes</label><select id="d1goMesFilter"><option value="">Todos</option></select></div>
+        <div class="field"><label for="d1goFechaFilter">Día</label><select id="d1goFechaFilter"><option value="">Todos</option></select></div>
+        <div class="field"><label for="d1goSearchInput">Buscar</label><input id="d1goSearchInput" type="text" placeholder="ID, tienda, área..." /></div>
+        <div style="display:flex; gap:6px; align-self:flex-end; flex-wrap:wrap;"><button class="btn btn-primary btn-sm" id="applyD1goStatsBtn">Actualizar</button><button class="btn btn-secondary btn-sm" id="clearD1goStatsBtn">Limpiar</button><button class="btn btn-secondary btn-sm" id="exportD1goFilteredBtn">⬇ Exportar visible</button></div>
+      </div>
+    </div>
+    <div id="d1goStatsContent"></div>
+    <div id="d1goDynamicDetail"></div>
+  </div>
+</div>
+
+<!-- CICLO CORTO SEMANAL MODAL -->
+<div id="cicloCortoModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header"><div><div class="modal-title">📆 Ciclo corto semanal D1GO</div><div class="modal-subtitle">Tabla dinámica semanal por supervisor, estado y fecha. Muestra el detalle real de cada conteo.</div></div><div class="modal-actions"><button class="btn btn-secondary btn-sm" id="copyCicloCortoBtn">📋 Copiar tabla</button><button class="btn btn-secondary btn-sm" id="exportCicloCortoBtn">⬇ Exportar Excel</button><button class="btn btn-secondary btn-sm" onclick="closeCicloCortoModal()">✕ Cerrar</button></div></div>
+    <div class="cycle-info-banner"><div><strong>¿Qué mide?</strong><p><strong>Ciclo corto</strong> toma el D1GO completo y arma una tabla tipo dinámica por <strong>supervisor</strong>, <strong>estado</strong> y <strong>fechas del rango</strong>. Sirve para revisar una semana o varias semanas de trabajo y ver cuántos casos están abiertos, cerrados, solicitados o pendientes.</p></div><div class="pro-mini-kpis"><span class="pro-mini-kpi"><strong>Rango editable</strong> tú eliges desde/hasta</span><span class="pro-mini-kpi"><strong>Detalle visible</strong> clic en un número para ver casos</span></div></div>
+    <div class="cycle-controls"><input id="cyclePrevStart" type="hidden" /><input id="cyclePrevEnd" type="hidden" /><div class="field"><label for="cycleCurrStart">Desde</label><input id="cycleCurrStart" type="date" /></div><div class="field"><label for="cycleCurrEnd">Hasta</label><input id="cycleCurrEnd" type="date" /></div><div class="field"><label for="cycleDateType">Fecha a evaluar</label><select id="cycleDateType"><option value="ingreso">Fecha ingreso / creación</option><option value="cierre">Fecha cierre</option><option value="ambas">Ingreso o cierre</option><option value="auto" selected>Auto: cerradas por cierre, demás por ingreso</option></select></div><div class="field"><label for="cycleSupervisorFilter">Supervisor</label><select id="cycleSupervisorFilter"><option value="">Todos</option></select></div><div class="field"><label for="cycleEstadoFilter">Estado</label><select id="cycleEstadoFilter"><option value="">Todos</option></select></div><div class="field"><label for="cycleUniqueIds">Conteo</label><label class="inline-check"><input id="cycleUniqueIds" type="checkbox" checked /> Contar ID único por fecha</label></div><div class="field"><label>Depurar</label><label class="inline-check"><input id="cycleRemoveVitales" type="checkbox" /> Quitar vitales</label></div><div class="field"><label>Resumen</label><label class="inline-check"><input id="cycleResumenEstados" type="checkbox" /> RESUM</label></div><div class="field"><label for="cycleSearchInput">Buscar</label><input id="cycleSearchInput" type="text" placeholder="ID, tienda, supervisor..." /></div><div class="field"><label>Actualización</label><div class="inline-check" style="min-height:44px;">Automática al cambiar fechas o filtros</div></div></div>
+    <div class="ccurg-days-box" id="cycleDaysBox">
+      <div class="ccurg-days-head">
+        <div><strong>Días exactos a mostrar</strong><small>Marca solo las fechas que quieres ver como columnas en Ciclo Corto.</small></div>
+        <div class="ccurg-days-actions">
+          <button class="btn btn-secondary btn-sm" id="cycleSelectAllDaysBtn" type="button" onclick="window.__forceCycleDays && window.__forceCycleDays('all')">Todos</button>
+          <button class="btn btn-secondary btn-sm" id="cycleClearDaysBtn" type="button" onclick="window.__forceCycleDays && window.__forceCycleDays('none')">Quitar todas las selecciones</button>
+        </div>
+      </div>
+      <div id="cycleDaysList" class="ccurg-days-grid"></div>
+    </div>
+    <div id="cicloCortoContent"></div>
+  </div>
+</div>
+
+<!-- CCURGVITAL MODAL -->
+<div id="ccurgVitalModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">CCURGVITAL</div>
+        <div class="modal-subtitle">Tabla dinámica tipo Excel para Prioridad Urgencia Vital: Supervisor → Estado → Fecha de ingreso exacta.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" id="copyCCUrgVitalBtn" type="button">📋 Copiar tabla</button>
+        <button class="btn btn-secondary btn-sm" id="exportCCUrgVitalBtn" type="button">⬇ Exportar Excel</button>
+        <button class="btn btn-secondary btn-sm" onclick="closeCCUrgVitalModal()" type="button">✕ Cerrar</button>
+      </div>
+    </div>
+    <div class="ccurg-note">
+      <strong>Filtro fijo:</strong> Prioridad = <span class="ccurg-fixed-badge">Urgencia Vital</span>.
+      La tabla cuenta IDs agrupados por supervisor, estado y fecha de ingreso. Puedes activar RESUM para unir Abierta/Solicitada y Cerrada/Rechazada/Anulada.
+    </div>
+    <div class="ccurg-filter-bar">
+      <div class="field"><label for="ccurgStart">Desde</label><input id="ccurgStart" type="date" /></div>
+      <div class="field"><label for="ccurgEnd">Hasta</label><input id="ccurgEnd" type="date" /></div>
+      <div class="field"><label for="ccurgGroupMode">Agrupar columnas</label><select id="ccurgGroupMode"><option value="day" selected>Día exacto</option><option value="week">Semana lunes</option></select></div>
+      <div class="field"><label for="ccurgRowLimit">Cantidad de filas</label><select id="ccurgRowLimit"><option value="all" selected>Todas</option><option value="5">Top 5 supervisores</option><option value="10">Top 10 supervisores</option><option value="20">Top 20 supervisores</option><option value="50">Top 50 supervisores</option></select></div>
+      <div class="field"><label for="ccurgTipoFilter">Tipo</label><select id="ccurgTipoFilter"><option value="">Todos</option></select></div>
+      <div class="field"><label for="ccurgSupervisorFilter">Supervisor</label><select id="ccurgSupervisorFilter"><option value="">Todos</option></select></div>
+      <div class="field"><label for="ccurgEstadoFilter">Estado</label><select id="ccurgEstadoFilter"><option value="">Todos</option></select></div>
+      <div class="field"><label>Resumen</label><label class="inline-check"><input id="ccurgResumenEstados" type="checkbox" /> RESUM</label></div>
+      <div class="field"><label for="ccurgSearchInput">Buscar</label><input id="ccurgSearchInput" type="text" placeholder="ID, tienda, detalle..." /></div>
+      <div style="display:flex;gap:8px;align-self:end;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" id="applyCCUrgVitalBtn" type="button">Actualizar</button>
+        <button class="btn btn-secondary btn-sm" id="resetCCUrgVitalBtn" type="button">Últimas fechas</button>
+      </div>
+      <div class="ccurg-days-box">
+        <div class="ccurg-days-head">
+          <div><strong>Días exactos visibles</strong><br><small>Marca únicamente los días que quieres ver como columnas.</small></div>
+          <div class="ccurg-days-actions">
+            <button class="btn btn-secondary btn-sm" id="ccurgSelectAllDaysBtn" type="button" onclick="window.__forceCCUrgDays && window.__forceCCUrgDays('all')">Todos</button>
+            <button class="btn btn-secondary btn-sm" id="ccurgClearDaysBtn" type="button" onclick="window.__forceCCUrgDays && window.__forceCCUrgDays('none')">Quitar todas las selecciones</button>
+          </div>
+        </div>
+        <div id="ccurgDaysList" class="ccurg-days-grid"></div>
+      </div>
+    </div>
+    <div id="ccurgVitalContent"></div>
+    <div id="ccurgVitalDetailBox"></div>
+  </div>
+</div>
+
+
+<!-- STATS MODAL -->
+<div id="statsModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📊 Estadísticas resumidas</div>
+        <div class="modal-subtitle">Comparación por proveedor, tienda o supervisor</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" id="openChartsBtn">📈 Ver gráficos</button>
+        <button class="btn btn-secondary btn-sm" onclick="closeStatsModal()">✕ Cerrar</button>
+      </div>
+    </div>
+    <div class="stats-toolbar">
+      <div class="field">
+        <label for="statsModeSelect">Agrupar por</label>
+        <select id="statsModeSelect">
+          <option value="proveedor">Proveedores</option>
+          <option value="tienda">Tiendas</option>
+          <option value="supervisor">Supervisores</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="statsSearchInput">Buscar</label>
+        <input id="statsSearchInput" type="text" placeholder="Filtrar lista..." />
+      </div>
+      <div class="field">
+        <label for="statsMonthFilter">Mes</label>
+        <select id="statsMonthFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="statsSupervisorFilter">Supervisor base</label>
+        <select id="statsSupervisorFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="statsOrderBy">Ordenar por</label>
+        <select id="statsOrderBy">
+          <option value="total">Total general</option>
+          <option value="facturado">Más facturado</option>
+          <option value="pendiente">Más pendiente</option>
+        </select>
+      </div>
+      <label class="inline-check" style="min-height:auto; width:auto;" title="Usa el mismo filtro global de activos que la vista principal."><input id="statsIncludeActivos" type="checkbox" checked /> Incluir activos</label>
+      <button class="btn btn-primary btn-sm" id="applyStatsFilterBtn">Actualizar</button>
+      <button class="btn btn-secondary btn-sm" id="clearStatsFilterBtn">Limpiar</button>
+    </div>
+    <div class="selection-layout">
+      <div class="selection-panel">
+        <h4>Seleccionar para comparar</h4>
+        <p style="font-size:11px; color:var(--muted); margin-bottom:10px;">Si no seleccionas nada se muestran los primeros 9.</p>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <button class="btn btn-secondary btn-sm" id="statsTop9Btn">Top 9</button>
+          <button class="btn btn-secondary btn-sm" id="statsClearSelectionBtn">Quitar todo</button>
+        </div>
+        <div id="statsSelectionList" class="selection-list"></div>
+      </div>
+      <div id="statsSummaryContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHARTS MODAL -->
+<div id="chartsModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="chartTitle">📈 Gráficos comparativos</div>
+        <div class="modal-subtitle">Comparación visual con valores sobre cada barra</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-sm" id="exportCurrentChartBtn">⬇ Exportar visible</button>
+        <button class="btn btn-secondary btn-sm" id="exportAllChartsBtn">⬇ Exportar completo</button>
+        <button class="btn btn-secondary btn-sm" onclick="closeChartsModal()">✕ Cerrar gráficos</button>
+      </div>
+    </div>
+    <div class="stats-toolbar">
+      <div class="field">
+        <label for="chartsModeSelect">Agrupar por</label>
+        <select id="chartsModeSelect">
+          <option value="proveedor">Proveedores</option>
+          <option value="tienda">Tiendas</option>
+          <option value="supervisor">Supervisores</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="chartsSearchInput">Buscar</label>
+        <input id="chartsSearchInput" type="text" placeholder="Filtrar lista..." />
+      </div>
+      <div class="field">
+        <label for="chartsMonthFilter">Mes</label>
+        <select id="chartsMonthFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="chartsSupervisorFilter">Supervisor base</label>
+        <select id="chartsSupervisorFilter"><option value="">Todos</option></select>
+      </div>
+      <div class="field">
+        <label for="chartsOrderBy">Ordenar por</label>
+        <select id="chartsOrderBy">
+          <option value="total">Total general</option>
+          <option value="facturado">Más facturado</option>
+          <option value="pendiente">Más pendiente</option>
+        </select>
+      </div>
+      <label class="inline-check" style="min-height:auto; width:auto;" title="Usa el mismo filtro global de activos que la vista principal."><input id="chartsIncludeActivos" type="checkbox" checked /> Incluir activos</label>
+      <button class="btn btn-primary btn-sm" id="applyChartsFilterBtn">Actualizar</button>
+      <button class="btn btn-secondary btn-sm" id="clearChartsFilterBtn">Limpiar</button>
+    </div>
+    <div class="selection-layout">
+      <div class="selection-panel">
+        <h4>Seleccionar para comparar</h4>
+        <p style="font-size:11px; color:var(--muted); margin-bottom:10px;">Si no seleccionas nada se muestran los primeros 9.</p>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <button class="btn btn-secondary btn-sm" id="chartsTop9Btn">Top 9</button>
+          <button class="btn btn-secondary btn-sm" id="chartsClearSelectionBtn">Quitar todo</button>
+        </div>
+        <div id="chartsSelectionList" class="selection-list"></div>
+      </div>
+      <div>
+        <div id="chartExecutiveSummary" class="chart-executive-summary"></div>
+        <div class="chart-helper-note">La selección de gráficos se conserva al buscar, cambiar mes, supervisor u orden. Si algún seleccionado ya no existe en el filtro actual, se retira automáticamente.</div>
+        <div class="chart-card" style="margin-bottom:14px;">
+          <div class="chart-wrap" style="height:320px;"><canvas id="mainChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-wrap" style="height:320px;"><canvas id="allChartCanvas"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CRUCE DETAIL MODAL -->
+<div id="cruceDetailModal" class="detail-modal">
+  <div class="detail-box" style="max-width:1000px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:18px; font-weight:800;">Detalle del cruce</div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Información completa de la coincidencia seleccionada</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="closeCruceDetailModal()">✕ Cerrar</button>
+    </div>
+    <div id="cruceDetailModalBody" class="detail-grid"></div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="detail-modal">
+  <div class="detail-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:18px; font-weight:800;">Detalle del registro</div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Información completa de la fila seleccionada</div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="closeDetailModal()">✕ Cerrar</button>
+    </div>
+    <div id="detailModalBody" class="detail-grid"></div>
+  </div>
+</div>
+
+<script src="src/data/directorio-ceco.js"></script>
+<script src="src/core/estado.js"></script>
+<script src="src/core/referencias-dom.js"></script>
+<script src="src/core/interfaz-base.js"></script>
+<script src="src/core/normalizacion.js"></script>
+<script src="src/features/oc/importar-oc.js"></script>
+<script src="src/features/oc/filtros.js"></script>
+<script src="src/features/oc/indicadores.js"></script>
+<script src="src/features/oc/tabla-y-detalle.js"></script>
+<script src="src/features/oc/buscar-y-exportar.js"></script>
+<script src="src/features/analitica/estadisticas-oc.js"></script>
+<script src="src/features/analitica/graficos-oc.js"></script>
+<script src="src/features/cruce/cruce-oc-d1go.js"></script>
+<script src="src/features/d1go/importar-d1go.js"></script>
+<script src="src/features/d1go/estadisticas-d1go.js"></script>
+<script src="src/features/ciclo-corto/ciclo-corto.js"></script>
+<script src="src/features/urgencias/urgencias-vitales.js"></script>
+<script src="src/core/drag-drop.js"></script>
+<script src="src/core/eventos.js"></script>
+<script src="src/core/tema.js"></script>
+
+
+<script src="src/features/documentos/buscador-documental.js"></script>
+
+
+<script src="src/features/ciclo-corto/parche-fechas-original.js"></script>
+
+
+
+<!-- FIX EXCLUIR PREVENTIVOS DE CICLO Y CCURGVITAL - INICIO -->
+<script src="src/features/preventivos/filtro-rutinas-original.js"></script>
+<!-- FIX EXCLUIR PREVENTIVOS DE CICLO Y CCURGVITAL - FIN -->
+
+
+<!-- MODULO PREVENTIVOS D1GO - INICIO -->
+<link rel="stylesheet" href="src/styles/ajustes.css">
+
+<script src="src/features/preventivos/preventivos.js"></script>
+<!-- MODULO PREVENTIVOS D1GO - FIN -->
+
+
+
+<!-- Diagnósticos adicionales: no modifican los reportes ni las fórmulas originales -->
+<script src="src/features/auditoria/auditoria-datos.js"></script>
+</body>
+</html>
+
+

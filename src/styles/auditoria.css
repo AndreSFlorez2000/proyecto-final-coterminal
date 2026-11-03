@@ -1,0 +1,12 @@
+.auditoria-fondo{display:none;position:fixed;inset:0;z-index:3900;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px)}
+.auditoria-ventana{width:min(1100px,100%);max-height:94vh;display:flex;flex-direction:column;background:var(--sidebar-bg);border:1px solid var(--border);border-radius:18px;color:var(--text);box-shadow:0 18px 54px rgba(0,0,0,.35)}
+.auditoria-cabecera{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:start;justify-content:space-between;gap:16px}
+.auditoria-cabecera h2{font-size:22px;margin-bottom:5px}.auditoria-cabecera p,.auditoria-contenido p{color:var(--muted);font-size:12px;line-height:1.55}
+.auditoria-contenido{overflow:auto;padding:20px 24px}.auditoria-cuadricula{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin-bottom:24px}
+.auditoria-tarjeta{display:flex;flex-direction:column;gap:6px;border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--surface)}
+.auditoria-tarjeta strong{font-size:24px;font-family:var(--font-mono)}.auditoria-tarjeta span{font-size:11px;color:var(--muted)}
+.auditoria-contenido h3{margin-top:22px;margin-bottom:7px;font-size:15px}.auditoria-tabla{overflow:auto;border:1px solid var(--border);border-radius:12px;margin-top:12px}
+.auditoria-tabla table{min-width:680px;width:100%;border-collapse:collapse}.auditoria-tabla th,.auditoria-tabla td{text-align:left;padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);white-space:normal;overflow-wrap:anywhere}.auditoria-tabla th{position:sticky;top:0;background:var(--th-bg)}
+.auditoria-nota{margin-top:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px}.auditoria-pie{padding:13px 20px;border-top:1px solid var(--border);display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.auditoria-pie small{font-size:11px;color:var(--muted);max-width:610px}
+@media(max-width:650px){.auditoria-fondo{padding:6px}.auditoria-cabecera,.auditoria-contenido{padding:14px}.auditoria-cabecera h2{font-size:17px}.auditoria-cuadricula{grid-template-columns:repeat(2,minmax(0,1fr))}}

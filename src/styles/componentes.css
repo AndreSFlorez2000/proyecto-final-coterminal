@@ -1,0 +1,292 @@
+
+/* =========================================================
+   AJUSTE FINAL D1GO: TABLA EXACTAMENTE TIPO IMAGEN
+   - Fondo oscuro transparente
+   - Bordes neón azul/morado
+   - Celdas sin fondo blanco
+   - Iconos estilo UI por color
+   ========================================================= */
+#d1goStatsModal .d1go-futuristic-shell,
+#d1goStatsContent {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(124,58,237,.16), transparent 28%),
+    radial-gradient(circle at 90% 10%, rgba(14,165,233,.14), transparent 30%),
+    linear-gradient(135deg, rgba(1,8,28,.98), rgba(1,19,52,.94));
+}
+
+#d1goStatsContent .chart-helper-note {
+  display:none !important;
+}
+
+#d1goStatsContent .d1go-pivot-table-wrap {
+  border-radius: 18px !important;
+  border: 1.5px solid rgba(0, 149, 255, .95) !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(139,92,246,.13), transparent 24%),
+    linear-gradient(135deg, rgba(0,16,45,.86), rgba(0,31,70,.72)) !important;
+  box-shadow:
+    0 0 0 1px rgba(99,102,241,.22),
+    0 0 22px rgba(0,149,255,.30),
+    inset 0 0 35px rgba(14,165,233,.08) !important;
+  padding: 0 !important;
+  overflow: auto !important;
+}
+
+#d1goStatsContent .d1go-pivot-table {
+  min-width: 980px !important;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  background: transparent !important;
+}
+
+#d1goStatsContent .d1go-pivot-table th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 4 !important;
+  height: 72px !important;
+  padding: 18px 16px !important;
+  text-align: center !important;
+  background: linear-gradient(180deg, rgba(2,20,60,.98), rgba(4,26,69,.92)) !important;
+  border-bottom: 1px solid rgba(125,211,252,.42) !important;
+  border-right: 1px solid rgba(125,211,252,.30) !important;
+  color: #f8fbff !important;
+  font-family: var(--font-main) !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  letter-spacing: .045em !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 12px rgba(125,211,252,.28) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table th:first-child,
+#d1goStatsContent .d1go-pivot-table th.total-head {
+  color: #22d3ee !important;
+}
+
+#d1goStatsContent .d1go-pivot-table th:first-child {
+  min-width: 250px !important;
+  text-align: center !important;
+}
+
+#d1goStatsContent .d1go-pivot-table th:last-child,
+#d1goStatsContent .d1go-pivot-table td:last-child {
+  border-right: none !important;
+}
+
+#d1goStatsContent .d1go-pivot-table td {
+  height: 86px !important;
+  padding: 18px 16px !important;
+  text-align: center !important;
+  background: rgba(2, 21, 58, .50) !important;
+  color: #f4f7ff !important;
+  border-bottom: 1px solid rgba(125,211,252,.30) !important;
+  border-right: 1px solid rgba(125,211,252,.28) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  text-shadow: 0 0 12px rgba(255,255,255,.14) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table td:first-child {
+  min-width: 250px !important;
+  text-align: left !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  background: rgba(1,17,48,.66) !important;
+  color: #f8fbff !important;
+  font-family: var(--font-main) !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  letter-spacing: .055em !important;
+  text-transform: uppercase !important;
+}
+
+#d1goStatsContent .d1go-pivot-table tr:hover td {
+  background: rgba(7, 38, 86, .72) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table tr:hover td:first-child {
+  background: rgba(7, 38, 86, .86) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table tr.row-total td {
+  height: 72px !important;
+  background: linear-gradient(180deg, rgba(3,29,77,.90), rgba(3,20,58,.96)) !important;
+  color: #eaf2ff !important;
+  border-top: 1.5px solid rgba(34,211,238,.70) !important;
+  border-bottom: none !important;
+}
+
+#d1goStatsContent .d1go-pivot-table tr.row-total td:first-child,
+#d1goStatsContent .d1go-pivot-table tr.row-total td.total-cell {
+  color: #22d3ee !important;
+  background: linear-gradient(180deg, rgba(3,29,77,.94), rgba(3,20,58,.98)) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table td.total-cell {
+  background: rgba(2, 25, 70, .70) !important;
+  color: #22d3ee !important;
+}
+
+#d1goStatsContent .d1go-pivot-table .cycle-count-btn {
+  width: 100% !important;
+  min-height: 40px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: inherit !important;
+  font-family: var(--font-mono) !important;
+  font-size: 24px !important;
+  font-weight: 950 !important;
+  cursor: pointer !important;
+  text-shadow: 0 0 14px rgba(34,211,238,.22) !important;
+}
+
+#d1goStatsContent .d1go-pivot-table .cycle-count-btn:hover {
+  transform: scale(1.08) !important;
+  color: #22d3ee !important;
+}
+
+#d1goStatsContent .d1go-pivot-table .cycle-empty-count {
+  opacity: .92 !important;
+  color: #e6edf8 !important;
+}
+
+#d1goStatsContent .d1go-row-icon {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  border-radius: 10px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 0 !important;
+  position: relative !important;
+  background: rgba(255,255,255,.04) !important;
+  box-shadow: 0 0 16px rgba(255,255,255,.08) !important;
+}
+
+#d1goStatsContent .d1go-row-icon::before,
+#d1goStatsContent .d1go-row-icon::after {
+  content: '' !important;
+  position: absolute !important;
+  box-sizing: border-box !important;
+}
+
+/* Abiertas: carpeta azul */
+#d1goStatsContent .d1go-row-icon.open {
+  border: 2px solid #38bdf8 !important;
+  background: linear-gradient(180deg, rgba(56,189,248,.30), rgba(37,99,235,.90)) !important;
+  box-shadow: 0 0 16px rgba(56,189,248,.45) !important;
+}
+#d1goStatsContent .d1go-row-icon.open::before {
+  width: 28px; height: 19px; left: 7px; bottom: 8px;
+  border: 3px solid #60a5fa; border-top-width: 5px; border-radius: 3px;
+}
+#d1goStatsContent .d1go-row-icon.open::after {
+  width: 15px; height: 7px; left: 8px; top: 10px;
+  border-top: 3px solid #60a5fa; border-left: 3px solid #60a5fa; border-right: 3px solid #60a5fa; border-radius: 3px 3px 0 0;
+}
+
+/* Solicitadas: documento amarillo */
+#d1goStatsContent .d1go-row-icon.req {
+  border: 2px solid #facc15 !important;
+  box-shadow: 0 0 16px rgba(250,204,21,.42) !important;
+}
+#d1goStatsContent .d1go-row-icon.req::before {
+  width: 26px; height: 31px; border: 3px solid #facc15; border-radius: 2px;
+}
+#d1goStatsContent .d1go-row-icon.req::after {
+  width: 17px; height: 14px; border-top: 3px solid #facc15; border-bottom: 3px solid #facc15; left: 14px; top: 15px;
+  box-shadow: 0 8px 0 #facc15;
+}
+
+/* Anuladas/Rechazadas: X */
+#d1goStatsContent .d1go-row-icon.cancel,
+#d1goStatsContent .d1go-row-icon.reject {
+  border-radius: 999px !important;
+  border: 3px solid #fb7185 !important;
+  box-shadow: 0 0 16px rgba(251,113,133,.42) !important;
+}
+#d1goStatsContent .d1go-row-icon.reject { border-color:#c084fc !important; box-shadow:0 0 16px rgba(192,132,252,.42) !important; }
+#d1goStatsContent .d1go-row-icon.cancel::before,
+#d1goStatsContent .d1go-row-icon.reject::before,
+#d1goStatsContent .d1go-row-icon.cancel::after,
+#d1goStatsContent .d1go-row-icon.reject::after {
+  width: 24px; height: 3px; border-radius: 99px; background: #fb7185; top: 20px; left: 9px;
+}
+#d1goStatsContent .d1go-row-icon.reject::before,
+#d1goStatsContent .d1go-row-icon.reject::after { background:#c084fc; }
+#d1goStatsContent .d1go-row-icon.cancel::before,
+#d1goStatsContent .d1go-row-icon.reject::before { transform: rotate(45deg); }
+#d1goStatsContent .d1go-row-icon.cancel::after,
+#d1goStatsContent .d1go-row-icon.reject::after { transform: rotate(-45deg); }
+
+/* Cerradas: check verde */
+#d1goStatsContent .d1go-row-icon.close,
+#d1goStatsContent .d1go-row-icon.vital-close {
+  border-radius: 999px !important;
+  border: 3px solid #7Cff6b !important;
+  box-shadow: 0 0 18px rgba(124,255,107,.42) !important;
+}
+#d1goStatsContent .d1go-row-icon.close::before,
+#d1goStatsContent .d1go-row-icon.vital-close::before {
+  width: 23px; height: 12px; border-left: 4px solid #7Cff6b; border-bottom: 4px solid #7Cff6b; transform: rotate(-45deg); top: 13px; left: 10px;
+}
+
+/* Urgencia vital abierta: alerta roja */
+#d1goStatsContent .d1go-row-icon.vital-open,
+#d1goStatsContent .d1go-row-icon.vital {
+  border-radius: 999px !important;
+  border: 3px solid #ff4d6d !important;
+  background: rgba(255,77,109,.12) !important;
+  box-shadow: 0 0 22px rgba(255,77,109,.55) !important;
+}
+#d1goStatsContent .d1go-row-icon.vital-open::before,
+#d1goStatsContent .d1go-row-icon.vital::before {
+  width: 6px; height: 19px; background:#ff4d6d; border-radius:99px; top: 8px; left: 18px;
+}
+#d1goStatsContent .d1go-row-icon.vital-open::after,
+#d1goStatsContent .d1go-row-icon.vital::after {
+  width: 7px; height: 7px; background:#ff4d6d; border-radius:999px; bottom: 8px; left: 18px;
+}
+
+/* Total: calculadora blanca/cian */
+#d1goStatsContent .d1go-row-icon.total {
+  border: 2px solid #e0f2fe !important;
+  box-shadow: 0 0 16px rgba(224,242,254,.32) !important;
+}
+#d1goStatsContent .d1go-row-icon.total::before {
+  width: 26px; height: 31px; border: 3px solid #e0f2fe; border-radius: 3px; top: 6px; left: 8px;
+}
+#d1goStatsContent .d1go-row-icon.total::after {
+  width: 16px; height: 3px; background:#e0f2fe; top: 15px; left: 14px;
+  box-shadow: 0 7px 0 #e0f2fe, -5px 14px 0 #e0f2fe, 3px 14px 0 #e0f2fe, 11px 14px 0 #e0f2fe;
+}
+
+/* Filas vitales diferenciadas pero sin salirse del estilo de la imagen */
+#d1goStatsContent .d1go-pivot-table tr.row-urg-vitales-abiertas td,
+#d1goStatsContent .d1go-pivot-table tr.row-urg-vitales-cerradas td,
+#d1goStatsContent .d1go-pivot-table tr.row-vitales td {
+  background: linear-gradient(90deg, rgba(95,15,35,.62), rgba(3,24,62,.56)) !important;
+  color: #ffe4e6 !important;
+}
+#d1goStatsContent .d1go-pivot-table tr.row-urg-vitales-abiertas td:first-child,
+#d1goStatsContent .d1go-pivot-table tr.row-urg-vitales-cerradas td:first-child,
+#d1goStatsContent .d1go-pivot-table tr.row-vitales td:first-child {
+  background: linear-gradient(90deg, rgba(127,29,29,.82), rgba(3,24,62,.66)) !important;
+  color: #fff7f7 !important;
+}
+
+/* Header visual superior como la imagen */
+#d1goStatsModal .modal-title,
+#d1goStatsModal h3,
+#d1goStatsModal h4 {
+  letter-spacing: .04em;
+}
+
+@media (max-width: 800px) {
+  #d1goStatsContent .d1go-pivot-table th { font-size: 14px !important; padding: 14px 10px !important; }
+  #d1goStatsContent .d1go-pivot-table td { font-size: 20px !important; padding: 14px 10px !important; }
+  #d1goStatsContent .d1go-pivot-table td:first-child { font-size: 13px !important; min-width: 220px !important; }
+}

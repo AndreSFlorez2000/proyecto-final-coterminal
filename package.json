@@ -1,0 +1,11 @@
+{
+  "name": "proyecto-final-coterminal",
+  "version": "1.0.0-migracion",
+  "private": true,
+  "description": "Primera migración estructural, conservadora, del aplicativo Control OC D1",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "dev": "python -m http.server 5500 --bind 127.0.0.1"
+  },
+  "engines": {"node": ">=18"}
+}

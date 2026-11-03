@@ -1,0 +1,407 @@
+
+  #preventivosModal .modal-box { max-width: 1520px; }
+
+  .preventivos-shell {
+    display: grid;
+    gap: 14px;
+  }
+
+  .preventivos-hero {
+    display:grid;
+    grid-template-columns: 1.5fr auto;
+    gap:14px;
+    align-items:center;
+    padding:18px 20px;
+    border:1px solid rgba(34,197,94,.35);
+    background:linear-gradient(135deg, rgba(34,197,94,.16), rgba(96,165,250,.09), rgba(255,59,59,.04));
+    border-radius:var(--radius);
+    margin-bottom:2px;
+  }
+  .preventivos-hero strong { display:block; font-size:18px; font-weight:900; color:var(--text); }
+  .preventivos-hero p { margin-top:5px; color:var(--muted); font-size:13px; line-height:1.5; }
+
+  .preventivos-filter-note {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    border:1px solid rgba(96,165,250,.28);
+    background:rgba(96,165,250,.10);
+    color:var(--text);
+    border-radius:var(--radius-sm);
+    padding:11px 13px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    line-height:1.45;
+  }
+  .preventivos-filter-note strong { color:var(--accent); }
+
+  .preventivos-controls {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(165px,1fr));
+    gap:10px;
+    align-items:end;
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--surface);
+  }
+
+  .preventivos-days-box {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:var(--radius);
+    padding:14px;
+  }
+  .preventivos-days-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .preventivos-days-head strong { display:block; color:var(--text); font-weight:900; }
+  .preventivos-days-head small { display:block; color:var(--muted); font-family:var(--font-mono); margin-top:3px; }
+  .preventivos-days-list {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    max-height:132px;
+    overflow:auto;
+    padding-right:4px;
+  }
+  .preventivos-day-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--surface2);
+    font-family:var(--font-mono);
+    font-size:11px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .preventivos-day-chip input { accent-color:var(--accent); }
+
+  .preventivos-kpi-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+    gap:10px;
+  }
+  .preventivos-kpi {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:var(--radius-sm);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:.15s ease;
+    min-height:86px;
+  }
+  .preventivos-kpi:hover {
+    transform:translateY(-2px);
+    border-color:rgba(255,59,59,.34);
+    box-shadow:0 12px 28px rgba(0,0,0,.13);
+  }
+  .preventivos-kpi.active {
+    border-color:rgba(255,59,59,.55);
+    box-shadow:0 0 0 3px rgba(255,59,59,.12);
+  }
+  .preventivos-kpi .label {
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:7px;
+  }
+  .preventivos-kpi .value {
+    font-family:var(--font-mono);
+    font-size:26px;
+    font-weight:900;
+    color:var(--text);
+  }
+  .preventivos-kpi.bad { border-color:rgba(255,59,59,.34); background:rgba(255,59,59,.08); }
+  .preventivos-kpi.good { border-color:rgba(34,197,94,.34); background:rgba(34,197,94,.08); }
+  .preventivos-kpi.warn { border-color:rgba(250,204,21,.34); background:rgba(250,204,21,.08); }
+
+  .preventivos-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap:12px;
+  }
+  .preventivos-card {
+    border:1px solid var(--border);
+    background:var(--surface);
+    border-radius:var(--radius);
+    padding:14px;
+    min-width:0;
+    overflow:hidden;
+  }
+  .preventivos-card h4 {
+    font-size:14px;
+    font-weight:900;
+    margin-bottom:10px;
+    color:var(--text);
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    align-items:center;
+  }
+  .preventivos-card h4 small {
+    font-family:var(--font-mono);
+    color:var(--muted);
+    font-size:10px;
+    font-weight:700;
+  }
+
+  .preventivos-click-table {
+    width:100%;
+    min-width:260px;
+    border-collapse:collapse;
+  }
+  .preventivos-click-table th,
+  .preventivos-click-table td {
+    padding:8px 10px;
+    font-size:12px;
+    border-bottom:1px solid var(--border);
+  }
+  .preventivos-click-table th {
+    background:var(--th-bg);
+    color:var(--text);
+    position:sticky;
+    top:0;
+    z-index:1;
+  }
+  .preventivos-click-table td:first-child { white-space:normal; }
+  .preventivos-click-table .num-btn {
+    border:1px solid rgba(255,59,59,.26);
+    background:rgba(255,59,59,.09);
+    color:var(--accent);
+    border-radius:999px;
+    padding:5px 10px;
+    font-family:var(--font-mono);
+    font-weight:900;
+    cursor:pointer;
+    min-width:42px;
+  }
+  .preventivos-click-table .num-btn:hover {
+    background:rgba(255,59,59,.17);
+  }
+
+  .preventivos-table-toolbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:13px 15px;
+    border:1px solid var(--border);
+    border-bottom:none;
+    border-radius:var(--radius) var(--radius) 0 0;
+    background:var(--surface);
+  }
+  .preventivos-table-toolbar h4 {
+    margin:0;
+    font-size:15px;
+    font-weight:900;
+  }
+  .preventivos-table-toolbar small {
+    color:var(--muted);
+    font-family:var(--font-mono);
+  }
+
+  .preventivos-table-wrap {
+    width:100%;
+    overflow:auto;
+    border:1px solid var(--border);
+    border-radius:0 0 var(--radius) var(--radius);
+    background:var(--surface);
+  }
+  .preventivos-table { width:100%; min-width:1080px; border-collapse:collapse; }
+  .preventivos-table th, .preventivos-table td {
+    padding:9px 11px;
+    font-size:12px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  .preventivos-table th {
+    position:sticky;
+    top:0;
+    z-index:2;
+    background:var(--th-bg);
+    color:var(--text);
+  }
+
+  .preventivo-detail-panel {
+    border:1px solid rgba(96,165,250,.28);
+    background:rgba(96,165,250,.08);
+    border-radius:var(--radius);
+    padding:16px;
+    margin-top:14px;
+  }
+  .preventivo-detail-long {
+    white-space:pre-wrap;
+    line-height:1.55;
+    max-height:320px;
+    overflow:auto;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    background:var(--surface);
+  }
+
+  body.light .preventivos-click-table .num-btn { color:#b91c1c; }
+
+  .preventivo-floating-detail {
+    display:none !important;
+    position:fixed !important;
+    inset:0 !important;
+    z-index:99999 !important;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(8px);
+    padding:24px;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  .preventivo-floating-detail.visible {
+    display:flex !important;
+  }
+  .preventivo-floating-box {
+    width:min(920px,96vw);
+    max-height:88vh;
+    margin:auto;
+    background:var(--sidebar-bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .preventivo-floating-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    padding:16px 18px;
+    border-bottom:1px solid var(--border);
+    background:var(--sidebar-bg);
+  }
+  .preventivo-floating-title {
+    font-size:16px;
+    font-weight:900;
+    color:var(--text);
+  }
+  .preventivo-floating-subtitle {
+    margin-top:4px;
+    color:var(--muted);
+    font-family:var(--font-mono);
+    font-size:11px;
+  }
+  .preventivo-floating-body {
+    padding:18px;
+    overflow:auto;
+    max-height:calc(88vh - 92px);
+  }
+  .preventivo-floating-text {
+    white-space:pre-wrap;
+    line-height:1.65;
+    font-size:14px;
+    color:var(--text);
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:16px;
+    min-height:180px;
+  }
+
+
+  .preventivos-subfilters {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap:10px;
+    padding:13px 15px;
+    border-left:1px solid var(--border);
+    border-right:1px solid var(--border);
+    background:var(--surface);
+  }
+  .preventivos-subfilters .field label {
+    font-size:10px;
+  }
+  .preventivos-subfilters .field input,
+  .preventivos-subfilters .field select {
+    min-height:38px;
+    font-size:12px;
+  }
+  .preventivos-pagination {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:12px 15px;
+    border:1px solid var(--border);
+    border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);
+    background:var(--surface);
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+  }
+  .preventivos-page-controls {
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex-wrap:wrap;
+  }
+  .preventivos-page-controls select {
+    padding:7px 10px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--surface2);
+    color:var(--text);
+    font-family:var(--font-mono);
+    font-size:12px;
+  }
+  .preventivos-page-btn {
+    min-width:34px;
+    min-height:34px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:var(--surface2);
+    color:var(--text);
+    cursor:pointer;
+    font-family:var(--font-mono);
+    font-weight:900;
+  }
+  .preventivos-page-btn:hover { border-color:rgba(255,59,59,.45); color:var(--accent); }
+  .preventivos-page-btn:disabled { opacity:.42; cursor:not-allowed; }
+  .preventivos-active-subfilters {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    padding:0 15px 12px;
+    border-left:1px solid var(--border);
+    border-right:1px solid var(--border);
+    background:var(--surface);
+  }
+  .preventivos-chip {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 9px;
+    border-radius:999px;
+    border:1px solid rgba(255,59,59,.25);
+    background:rgba(255,59,59,.08);
+    color:var(--text);
+    font-family:var(--font-mono);
+    font-size:10px;
+  }
+
+  @media (max-width:700px){
+    .preventivos-hero { grid-template-columns:1fr; }
+  }

@@ -1,0 +1,44 @@
+# Dependencias y artefactos generados
+node_modules/
+coverage/
+dist/
+build/
+.cache/
+__pycache__/
+*.pyc
+
+# Datos operativos y documentos empresariales (no subir al repositorio)
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.tsv
+*.pdf
+*.docx
+*.pptx
+*.zip
+*.7z
+*.rar
+
+# Credenciales y configuraciones locales
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+
+# Directorios de datos locales
+uploads/
+imports/
+backups/
+private/
+data-local/
+
+# Archivos de sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
