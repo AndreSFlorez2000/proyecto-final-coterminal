@@ -2,6 +2,12 @@
 
 Aplicación de control de órdenes de compra y seguimiento D1Go, migrada desde un prototipo HTML hacia una estructura con módulos por carpetas.
 
+## Abrir demostración online
+
+[**▶ Abrir aplicativo en el navegador**](https://rawcdn.githack.com/AndreSFlorez2000/proyecto-final-coterminal/5db59dc8f60ab1ac4c315c507b3697d5315e45d8/index.html)
+
+Este enlace sirve el HTML y los archivos estáticos de una versión concreta del repositorio a través de RawGitHack, un servicio externo independiente de GitHub. No necesita instalar nada, aunque puede mostrar una pantalla de confirmación antes de abrir. La URL es una alternativa de **demostración**; GitHub Pages aún no está habilitado. No introduzcas información empresarial confidencial ni credenciales en esta edición pública. El servicio externo no ofrece garantías de disponibilidad.
+
 ## Seguridad y alcance
 
 **Este repositorio es una edición pública de demostración.** Se retiraron el directorio regional CECO, las credenciales y hashes de autenticación heredados, el respaldo HTML original y el webhook particular de n8n. No incluye archivos operativos.
